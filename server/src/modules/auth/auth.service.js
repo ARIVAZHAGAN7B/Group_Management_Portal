@@ -33,6 +33,30 @@ const MOCK_USERS = [
         name: 'Arivazhagan',
         rollNumber: '7376231CS116',
         role: 'STUDENT'
+    },
+    {
+        id: 'student_2',
+        email: 'student2@uni.edu',
+        password: 'password123',
+        name: 'Sarah Miller',
+        rollNumber: '2023CS202',
+        role: 'STUDENT'
+    },
+    {
+        id: 'student_3',
+        email: 'student3@uni.edu',
+        password: 'password123',
+        name: 'Michael Brown',
+        rollNumber: '2023CS303',
+        role: 'STUDENT'
+    },
+    {
+        id: 'student_4',
+        email: 'student4@uni.edu',
+        password: 'password123',
+        name: 'Elena Garcia',
+        rollNumber: '2023CS404',
+        role: 'STUDENT'
     }
 
 ];

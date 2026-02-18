@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'http://localhost:5000/api/v1';
 
 export const api = {
     async post(endpoint, data) {

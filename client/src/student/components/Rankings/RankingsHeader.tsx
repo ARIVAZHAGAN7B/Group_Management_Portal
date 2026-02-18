@@ -14,7 +14,7 @@ export const RankingsHeader: React.FC<RankingsHeaderProps> = ({ search, onSearch
       <div className="max-w-7xl mx-auto px-8 py-3 md:py-6 flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-6 w-full">
         <div>
           <h2 className="text-lg md:text-2xl font-black text-slate-900 tracking-tight leading-none mb-0.5 md:mb-1">Rankings</h2>
-          <p className="text-slate-500 text-[10px] md:text-xs font-medium">Performance tracking AY 2023-24</p>
+          <p className="text-slate-500 text-[10px] md:text-xs font-medium">AY 2023-24</p>
         </div>
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 md:gap-4">
           <div className="relative flex-1 sm:min-w-[240px]">
@@ -29,10 +29,6 @@ export const RankingsHeader: React.FC<RankingsHeaderProps> = ({ search, onSearch
               placeholder="Search students or groups..."
             />
           </div>
-          <button className="flex items-center justify-center gap-1.5 border border-slate-200 bg-white text-slate-700 px-3 md:px-4 py-1.5 md:py-2 rounded-lg text-[10px] md:text-xs font-bold hover:bg-slate-50 transition-all shadow-sm">
-            <FileDownloadIcon sx={{ fontSize: { xs: 14, md: 18 } }} />
-            <span>Export</span>
-          </button>
         </div>
       </div>
     </header>

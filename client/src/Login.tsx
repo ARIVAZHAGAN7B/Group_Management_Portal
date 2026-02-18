@@ -7,7 +7,7 @@ import {
   StudentRoleIcon,
   FacultyRoleIcon,
   AdminRoleIcon
-} from './Assets/Icons';
+} from './assets/Icons';
 
 export const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -24,6 +24,7 @@ export const Login: React.FC = () => {
 
     try {
       const response = await api.post('/auth/login', { email, password });
+      // The manual api.js returns the full JSON object
       const user = response.data.user;
 
       // Update store with user info

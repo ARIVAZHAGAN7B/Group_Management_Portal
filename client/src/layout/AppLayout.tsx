@@ -14,7 +14,8 @@ import {
   LogoIcon,
   ScheduleIcon,
   MessageIcon,
-  TimerIcon
+  TimerIcon,
+  LogoutIcon
 } from "../Assets/Icons";
 
 
@@ -122,7 +123,7 @@ export const AppLayout: React.FC = () => {
             ))}
           </nav>
 
-          <div className="p-4 border-t border-slate-100">
+          <div className="p-4 border-t border-slate-100 flex flex-col gap-4">
             <div className="flex items-center gap-3">
               <img src={user.avatar} className="w-8 h-8 rounded-full" />
               <div className="flex-1 overflow-hidden">
@@ -130,10 +131,18 @@ export const AppLayout: React.FC = () => {
                 <p className="text-[10px] text-slate-400 font-medium truncate">{user.rollNumber}</p>
               </div>
 
-              <button onClick={logout}>
+              <button className="text-slate-400 hover:text-blue-900 transition-colors">
                 <SettingsIcon sx={{ fontSize: 18 }} />
               </button>
             </div>
+
+            <button
+              onClick={logout}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-red-600 hover:bg-red-50 transition-all duration-200 font-semibold border border-transparent hover:border-red-100"
+            >
+              <LogoutIcon sx={{ fontSize: 20 }} />
+              <span className="text-sm">Logout Session</span>
+            </button>
           </div>
         </aside>
 

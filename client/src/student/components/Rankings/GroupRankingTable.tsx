@@ -56,9 +56,10 @@ export const GroupRankingTable: React.FC<GroupRankingTableProps> = ({ data }) =>
                 <td className="px-6 py-5">
                   <span className={`text-[9px] font-black px-3 py-1 rounded-lg uppercase border shadow-sm ${entry.tier === 'A' ? 'bg-amber-50 text-amber-700 border-amber-200' :
                     entry.tier === 'B' ? 'bg-slate-50 text-slate-700 border-slate-200' :
-                      'bg-orange-50 text-orange-700 border-orange-200'
+                      entry.tier === 'C' ? 'bg-orange-50 text-orange-700 border-orange-200' :
+                        'bg-red-50 text-red-700 border-red-200'
                     }`}>
-                    {entry.tier === 'A' ? 'Gold Tier' : entry.tier === 'B' ? 'Silver Tier' : 'Bronze Tier'}
+                    Tier {entry.tier}
                   </span>
                 </td>
                 <td className="px-6 py-5 text-sm text-slate-600 font-bold">

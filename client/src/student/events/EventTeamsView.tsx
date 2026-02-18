@@ -1,24 +1,24 @@
-
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { EventCard, type EventData } from './EventCard';
 import { EventDetailView } from './EventDetailView';
-import { ChevronLeftIcon, ChevronRightIcon, SearchIcon } from '../../Assets/Icons';
+import { ChevronLeftIcon, ChevronRightIcon, SearchIcon } from '../../assets/Icons';
 import FilterListIcon from "@mui/icons-material/FilterList";
+import { useAxios } from '../hooks/useAxios';
 
-const MOCK_EVENTS: EventData[] = [
-  { id: '#EVN-2024-001', title: 'Annual University Hackathon 2024', description: 'Join the biggest coding challenge of the year. Build innovative solutions.', status: 'Active', startDate: '2024-10-15', endDate: '2024-10-17', teamsCount: 42 },
-  { id: '#EVN-2024-002', title: 'Inter-College Robotics Expo', description: 'A showcase of the latest in autonomous systems.', status: 'Upcoming', startDate: '2024-11-02', endDate: '2024-11-05', teamsCount: 18 },
-  { id: '#EVN-2024-003', title: 'Sustainable Design Workshop', description: 'Collaborative workshop focused on eco-friendly urban planning.', status: 'Upcoming', startDate: '2024-11-20', endDate: '2024-11-21', teamsCount: 8 },
-  { id: '#EVN-2024-004', title: 'AI Ethics Symposium', description: 'Discussion on the moral implications of artificial intelligence.', status: 'Active', startDate: '2024-10-25', endDate: '2024-10-26', teamsCount: 12 },
-  { id: '#EVN-2024-005', title: 'Cyber Security Capture The Flag', description: 'Intense competition for security enthusiasts.', status: 'Upcoming', startDate: '2024-12-05', endDate: '2024-12-06', teamsCount: 30 },
-  { id: '#EVN-2024-006', title: 'Data Science Summit', description: 'Deep dive into big data analytics and machine learning.', status: 'Upcoming', startDate: '2025-01-15', endDate: '2025-01-17', teamsCount: 25 },
-  { id: '#EVN-2024-007', title: 'Blockchain Revolution Talk', description: 'Understanding the future of decentralized finance.', status: 'Active', startDate: '2024-10-10', endDate: '2024-10-11', teamsCount: 15 },
-  { id: '#EVN-2024-008', title: 'UX/UI Design Sprint', description: 'Design thinking workshop for creative problem solving.', status: 'Upcoming', startDate: '2024-11-12', endDate: '2024-11-14', teamsCount: 20 },
-  { id: '#EVN-2024-009', title: 'Mobile App Innovation Lab', description: 'Build and deploy your first native mobile application.', status: 'Completed', startDate: '2024-09-01', endDate: '2024-09-05', teamsCount: 14 },
-  { id: '#EVN-2024-000', title: 'Fall Semester Chess Championship', description: 'The annual strategic battle for the title of Grandmaster.', status: 'Completed', startDate: '2024-09-10', endDate: '2024-09-12', teamsCount: 64 },
-];
+interface ApiResponse {
+  status: string;
+  data: {
+    events: EventData[];
+  };
+}
 
 export const EventTeamsView: React.FC = () => {
+  const { data, loading, error } = useAxios<ApiResponse>({
+    url: '/events',
+    method: 'GET'
+  });
+
+  const MOCK_EVENTS = data?.data.events || [];
   const [selectedEvent, setSelectedEvent] = useState<EventData | null>(null);
   const [activeSubTab, setActiveSubTab] = useState<'all' | 'my'>('all');
   const [search, setSearch] = useState('');
@@ -140,8 +140,8 @@ export const EventTeamsView: React.FC = () => {
             <button
               onClick={() => { setActiveSubTab('all'); setCurrentPage(1); }}
               className={`pb-3 md:pb-4 text-xs md:text-sm font-bold flex items-center gap-2 transition-all border-b-[3px] whitespace-nowrap ${activeSubTab === 'all'
-                  ? 'text-[#003366] border-[#003366]'
-                  : 'text-slate-400 border-transparent hover:text-slate-600'
+                ? 'text-[#003366] border-[#003366]'
+                : 'text-slate-400 border-transparent hover:text-slate-600'
                 }`}
             >
               All Events
@@ -153,8 +153,8 @@ export const EventTeamsView: React.FC = () => {
             <button
               onClick={() => { setActiveSubTab('my'); setCurrentPage(1); }}
               className={`pb-3 md:pb-4 text-xs md:text-sm font-bold flex items-center gap-2 transition-all border-b-[3px] whitespace-nowrap ${activeSubTab === 'my'
-                  ? 'text-[#003366] border-[#003366]'
-                  : 'text-slate-400 border-transparent hover:text-slate-600'
+                ? 'text-[#003366] border-[#003366]'
+                : 'text-slate-400 border-transparent hover:text-slate-600'
                 }`}
             >
               My Events
@@ -164,11 +164,21 @@ export const EventTeamsView: React.FC = () => {
       </header>
 
       <main className="flex-1 max-w-7xl mx-auto px-8 py-6 md:py-8 space-y-4 w-full">
-        {paginatedEvents.map((event) => (
-          <EventCard key={event.id} event={event} onClick={handleViewEvent} />
-        ))}
+        {loading ? (
+          <div className="flex items-center justify-center py-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#003366]"></div>
+          </div>
+        ) : error ? (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-center">
+            Error loading events: {error.message}
+          </div>
+        ) : (
+          paginatedEvents.map((event) => (
+            <EventCard key={event.id} event={event} onClick={handleViewEvent} />
+          ))
+        )}
 
-        {paginatedEvents.length === 0 && (
+        {!loading && !error && paginatedEvents.length === 0 && (
           <div className="py-16 md:py-24 text-center bg-white rounded-xl border border-dashed border-slate-300 flex flex-col items-center">
             <div className="size-12 md:size-16 bg-slate-50 text-slate-300 rounded-full flex items-center justify-center mb-4">
               <FilterListIcon sx={{ fontSize: 24 }} />
@@ -202,8 +212,8 @@ export const EventTeamsView: React.FC = () => {
               key={i}
               onClick={() => handlePageChange(i + 1)}
               className={`size-7 md:size-8 flex items-center justify-center rounded border font-bold text-[10px] md:text-xs transition-all ${currentPage === i + 1
-                  ? 'border-[#003366] text-[#003366] bg-[#003366]/5 shadow-sm'
-                  : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+                ? 'border-[#003366] text-[#003366] bg-[#003366]/5 shadow-sm'
+                : 'border-slate-200 text-slate-600 hover:bg-slate-50'
                 }`}
             >
               {i + 1}

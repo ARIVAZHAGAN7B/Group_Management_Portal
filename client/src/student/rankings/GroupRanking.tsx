@@ -1,21 +1,29 @@
 import React, { useMemo } from "react";
 import { GroupRankingTable, type GroupEntry } from "../components/Rankings/GroupRankingTable";
 import { Podium } from "../components/Rankings/Podium";
+import { useAxios } from "../hooks/useAxios";
 
 interface Props {
   search: string;
   tier: string;
 }
 
-const MOCK_GROUPS: GroupEntry[] = [
-  { rank: 1, name: "Alpha Robotics Society", tier: "A", leaderName: "Sarah Chen", leaderRollNumber: "2023CS001", avgPoints: 1240, isCurrentUserGroup: true },
-  { rank: 2, name: "Quantum Theory Soc.", tier: "B", leaderName: "Marcus Wright", leaderRollNumber: "2023CS042", avgPoints: 1180 },
-  { rank: 3, name: "Neural Net Pioneers", tier: "B", leaderName: "Elena Petrova", leaderRollNumber: "2023CS012", avgPoints: 1150 }
-];
-
+interface ApiResponse {
+  status: string;
+  data: {
+    rankings: GroupEntry[];
+  };
+}
 
 export const GroupRanking: React.FC<Props> = ({ search, tier }) => {
-  const filteredData = useMemo(() => {
+  const { data, loading, error } = useAxios<ApiResponse>({
+    url: '/rankings/groups',
+    method: 'GET'
+  });
+
+  const MOCK_GROUPS = data?.data.rankings || [];
+
+  const allFilteredData = useMemo(() => {
     return MOCK_GROUPS.filter((item) => {
       const matchesSearch =
         item.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -23,15 +31,12 @@ export const GroupRanking: React.FC<Props> = ({ search, tier }) => {
 
       const matchesTier = tier === "All" || item.tier === tier;
 
-      const hideTopThree = search === "" && tier === "All";
-      if (hideTopThree && item.rank <= 3) return false;
-
       return matchesSearch && matchesTier;
     });
-  }, [search, tier]);
+  }, [MOCK_GROUPS, search, tier]);
 
   const podiumData = useMemo(() => {
-    return MOCK_GROUPS.slice(0, 3).map(g => ({
+    return allFilteredData.slice(0, 3).map(g => ({
       rank: g.rank,
       name: g.name,
       rollNumber: g.leaderRollNumber,
@@ -39,21 +44,43 @@ export const GroupRanking: React.FC<Props> = ({ search, tier }) => {
       tier: g.tier,
       points: g.avgPoints,
     }));
-  }, []);
+  }, [allFilteredData]);
+
+  const tableData = useMemo(() => allFilteredData.slice(3), [allFilteredData]);
+
+  // Find current user group in the FULL mock list so it's always shown in the mini-card
+  const currentUserGroup = useMemo(() => MOCK_GROUPS.find(g => g.isCurrentUserGroup), [MOCK_GROUPS]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#003366]"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-center">
+        Error loading rankings: {error.message}
+      </div>
+    );
+  }
+
 
   return (
     <>
-      {search === "" && tier === "All" && (
+      {podiumData.length > 0 && (
         <Podium
           topThree={podiumData}
-          userRank={1}
-          userPoints="1,240"
+          userRank={currentUserGroup?.rank || 0}
+          userPoints={currentUserGroup?.avgPoints.toLocaleString() || "0"}
         />
       )}
 
-      <GroupRankingTable data={filteredData} />
+      <GroupRankingTable data={tableData} />
 
-      {filteredData.length === 0 && (
+      {allFilteredData.length === 0 && (
         <div className="py-12 text-center bg-white rounded-xl border border-dashed border-slate-300">
           <p className="text-slate-500 text-sm font-medium">
             No results matching your search.

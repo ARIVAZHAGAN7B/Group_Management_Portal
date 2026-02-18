@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { UserIcon } from '../../../Assets/Icons';
+import { UserIcon } from '../../../assets/Icons';
 
 interface LeaderboardMember {
   id: number;

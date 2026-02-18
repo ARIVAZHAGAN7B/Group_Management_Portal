@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { GroupHeader } from "../components/Group/GroupHeader";
+import { useAxios } from "../hooks/useAxios";
 
 interface GroupData {
   name: string;
@@ -21,38 +22,72 @@ interface Member {
   isLeader?: boolean;
 }
 
+interface ApiResponse {
+  status: string;
+  data: {
+    group: GroupData;
+    members: Member[];
+  };
+}
+
 interface MyGroupViewProps {
-  groupData?: GroupData;
-  membersList?: Member[];
   onBack?: () => void;
   isOwnGroup?: boolean;
 }
 
 export const MyGroupView: React.FC<MyGroupViewProps> = ({
-  groupData = {
-    name: "Project Zeta",
-    tier: "Tier B",
-    members: 10,
-    maxMembers: 11,
-    status: "Active",
-  },
-  membersList,
   onBack,
   isOwnGroup = true,
 }) => {
-  // ✅ DATA STAYS HERE
-  const ALL_TEAM_MEMBERS: Member[] = membersList || [
-    { id: 101, name: "Alex Johnson", role: "Captain", points: "2,840", completion: 95, eligibility: "Qualified", incubation: "ACTIVE", isLeader: true },
-    { id: 102, name: "Maya Sterling", role: "Vice-Captain", points: "2,420", completion: 88, eligibility: "Qualified", incubation: "ACTIVE", isLeader: true },
-    { id: 103, name: "Liam Chen", role: "Strategist", points: "2,650", completion: 92, eligibility: "Qualified", incubation: "ACTIVE", isLeader: true },
-    { id: 104, name: "Sarah Smyth", role: "Manager", points: "2,100", completion: 85, eligibility: "Qualified", incubation: "ACTIVE", isLeader: true },
-    { id: 1, name: "Jordan Lee", role: "Research Analyst", points: "1,240", completion: 78, eligibility: "Qualified", incubation: "ACTIVE" },
-    { id: 2, name: "Sam Rivera", role: "Frontend Lead", points: "980", completion: 45, eligibility: "At Risk", incubation: "ACTIVE" },
-    { id: 3, name: "Taylor Kim", role: "Documentation", points: "1,100", completion: 82, eligibility: "Qualified", incubation: "NONE" },
-    { id: 4, name: "Casey Wright", role: "QA Tester", points: "850", completion: 65, eligibility: "Qualified", incubation: "ACTIVE" },
-    { id: 5, name: "Jamie Ortiz", role: "DevOps", points: "1,420", completion: 90, eligibility: "Qualified", incubation: "ACTIVE" },
-    { id: 6, name: "Morgan Smith", role: "Backend Dev", points: "1,150", completion: 72, eligibility: "Qualified", incubation: "ACTIVE" },
-  ];
+  const { data, loading, error } = useAxios<ApiResponse>({
+    url: '/my-group',
+    method: 'GET'
+  });
+
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-[#f5f7f8]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#003366]"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    if (error.response?.status === 404) {
+      return (
+        <div className="flex flex-col items-center justify-center min-h-[60vh] bg-[#f5f7f8] p-8 text-center">
+          <div className="bg-white p-10 rounded-3xl shadow-xl border border-slate-100 max-w-md w-full space-y-6">
+            <div className="size-20 bg-amber-50 rounded-full flex items-center justify-center mx-auto">
+              <span className="text-4xl">🔍</span>
+            </div>
+            <div className="space-y-2">
+              <h2 className="text-2xl font-black text-[#003366]">No Group Found</h2>
+              <p className="text-slate-500 font-medium">It looks like you haven't joined or been assigned to a group yet.</p>
+            </div>
+            <div className="pt-4">
+              <button className="w-full bg-[#003366] text-white font-bold py-3 rounded-xl shadow-lg shadow-[#003366]/20 active:scale-95 transition-all">
+                Find a Group
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-[#f5f7f8]">
+        <div className="bg-red-50 border border-red-200 text-red-600 font-bold p-6 rounded-2xl shadow-sm">
+          Error loading group data: {error.message}
+        </div>
+      </div>
+    );
+  }
+
+  const groupData = data?.data.group;
+  const ALL_TEAM_MEMBERS = data?.data.members || [];
+
+  if (!groupData) return null;
 
   return (
     <div className="flex flex-col w-full bg-[#f5f7f8] min-h-screen">
@@ -81,20 +116,18 @@ export const MyGroupView: React.FC<MyGroupViewProps> = ({
           {/* Router Navbar */}
           <div className="mt-8 flex gap-8 border-b border-slate-100">
             <NavLink to="members" className={({ isActive }) =>
-              `pb-4 text-sm font-bold border-b-[3px] ${
-                isActive
-                  ? "border-[#003366] text-[#003366]"
-                  : "border-transparent text-slate-400 hover:text-slate-600"
+              `pb-4 text-sm font-bold border-b-[3px] ${isActive
+                ? "border-[#003366] text-[#003366]"
+                : "border-transparent text-slate-400 hover:text-slate-600"
               }`
             }>
               Members
             </NavLink>
 
             <NavLink to="phases" className={({ isActive }) =>
-              `pb-4 text-sm font-bold border-b-[3px] ${
-                isActive
-                  ? "border-[#003366] text-[#003366]"
-                  : "border-transparent text-slate-400 hover:text-slate-600"
+              `pb-4 text-sm font-bold border-b-[3px] ${isActive
+                ? "border-[#003366] text-[#003366]"
+                : "border-transparent text-slate-400 hover:text-slate-600"
               }`
             }>
               Phases & Eligibility
@@ -102,10 +135,9 @@ export const MyGroupView: React.FC<MyGroupViewProps> = ({
 
             {isOwnGroup && (
               <NavLink to="group-leader-board" className={({ isActive }) =>
-                `pb-4 text-sm font-bold border-b-[3px] ${
-                  isActive
-                    ? "border-[#003366] text-[#003366]"
-                    : "border-transparent text-slate-400 hover:text-slate-600"
+                `pb-4 text-sm font-bold border-b-[3px] ${isActive
+                  ? "border-[#003366] text-[#003366]"
+                  : "border-transparent text-slate-400 hover:text-slate-600"
                 }`
               }>
                 Group Leaderboard

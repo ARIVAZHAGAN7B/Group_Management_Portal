@@ -11,12 +11,26 @@ interface StoreContextType {
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
 
 export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [auth, setAuth] = useState<AuthState>({
-    user: null,
-    isAuthenticated: false,
+  const [auth, setAuth] = useState<AuthState>(() => {
+    const savedUser = localStorage.getItem('gmp_user');
+    if (savedUser) {
+      try {
+        return {
+          user: JSON.parse(savedUser),
+          isAuthenticated: true,
+        };
+      } catch (e) {
+        console.error('Failed to parse saved user', e);
+      }
+    }
+    return {
+      user: null,
+      isAuthenticated: false,
+    };
   });
 
   const login = (user: User) => {
+    localStorage.setItem('gmp_user', JSON.stringify(user));
     setAuth({
       user,
       isAuthenticated: true,
@@ -25,6 +39,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
 
   const logout = () => {
+    localStorage.removeItem('gmp_user');
     setAuth({ user: null, isAuthenticated: false });
   };
 

@@ -1,23 +1,29 @@
 import React, { useMemo } from "react";
 import { RankingTable, type RankingEntry } from "../components/Rankings/RankingTable";
 import { Podium } from "../components/Rankings/Podium";
+import { useAxios } from "../hooks/useAxios";
 
 interface Props {
   search: string;
   tier: string;
 }
 
-const MOCK_INDIVIDUALS: RankingEntry[] = [
-  { rank: 1, name: "Sarah Jenkins", rollNumber: "2023CS001", groupName: "Group Alpha", tier: "A", points: 2450, role: "Captain" },
-  { rank: 2, name: "Michael Chen", rollNumber: "2023CS005", groupName: "Group Delta", tier: "A", points: 2310, role: "Captain" },
-  { rank: 3, name: "Elena Rodriguez", rollNumber: "2023CS012", groupName: "Group Beta", tier: "A", points: 2280, role: "Captain" },
-  { rank: 4, name: "James Wilson", rollNumber: "2023BI045", groupName: "Group Gamma", tier: "B", points: 2150, role: "Vice-Captain" },
-  { rank: 42, name: "Alex Johnson", rollNumber: "2023CS101", groupName: "Group Epsilon", tier: "C", points: 1120, isCurrentUser: true, role: "Captain" }
-];
-
+interface ApiResponse {
+  status: string;
+  data: {
+    rankings: RankingEntry[];
+  };
+}
 
 export const IndividualRanking: React.FC<Props> = ({ search, tier }) => {
-  const filteredData = useMemo(() => {
+  const { data, loading, error } = useAxios<ApiResponse>({
+    url: '/rankings/individuals',
+    method: 'GET'
+  });
+
+  const MOCK_INDIVIDUALS = data?.data.rankings || [];
+
+  const allFilteredData = useMemo(() => {
     return MOCK_INDIVIDUALS.filter((item) => {
       const matchesSearch =
         item.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -25,33 +31,52 @@ export const IndividualRanking: React.FC<Props> = ({ search, tier }) => {
 
       const matchesTier = tier === "All" || item.tier === tier;
 
-      const hideTopThree = search === "" && tier === "All";
-      if (hideTopThree && item.rank <= 3) return false;
-
       return matchesSearch && matchesTier;
     });
-  }, [search, tier]);
+  }, [MOCK_INDIVIDUALS, search, tier]);
+
+  const podiumData = useMemo(() => allFilteredData.slice(0, 3), [allFilteredData]);
+  const tableData = useMemo(() => allFilteredData.slice(3), [allFilteredData]);
+
+  // Find current user in the FULL mock list so it's always shown in the mini-card
+  const currentUser = useMemo(() => MOCK_INDIVIDUALS.find(u => u.isCurrentUser), [MOCK_INDIVIDUALS]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#003366]"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-center">
+        Error loading rankings: {error.message}
+      </div>
+    );
+  }
 
   return (
     <>
-      {search === "" && tier === "All" && (
+      {podiumData.length > 0 && (
         <Podium
-          topThree={MOCK_INDIVIDUALS.slice(0, 3)}
-          userRank={42}
-          userPoints="1,120"
+          topThree={podiumData}
+          userRank={currentUser?.rank || 0}
+          userPoints={currentUser?.points.toLocaleString() || "0"}
         />
       )}
 
       <RankingTable
-        data={filteredData}
+        data={tableData}
         currentPage={1}
         pageSize={10}
-        totalResults={filteredData.length}
+        totalResults={allFilteredData.length}
         onPageChange={() => { }}
         isLeaderView={false}
       />
 
-      {filteredData.length === 0 && (
+      {allFilteredData.length === 0 && (
         <div className="py-12 text-center bg-white rounded-xl border border-dashed border-slate-300">
           <p className="text-slate-500 text-sm font-medium">
             No results matching your search.

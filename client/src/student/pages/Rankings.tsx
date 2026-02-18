@@ -38,7 +38,7 @@ export const Rankings: React.FC = () => {
           onTierChange={setTier}
         />
 
-        <div className="px-8 max-w-7xl mx-auto w-full">
+        <div className="px-8 mt-[30px] max-w-7xl mx-auto w-full">
           {renderDashboard()}
         </div>
       </main>

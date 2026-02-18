@@ -1,5 +1,4 @@
-
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { type EventData } from './EventCard';
 import { EventTeamsTable, type ParticipatingTeam } from './EventTeamsTable';
 import { EventStatsRecap } from './EventStatsRecap';
@@ -10,39 +9,30 @@ import {
   AddCircleIcon,
   ChevronLeftIcon
 } from '../../Assets/Icons';
+import { useAxios } from '../hooks/useAxios';
 
 interface EventDetailViewProps {
   event: EventData;
   onBack: () => void;
 }
 
-const GET_MOCK_TEAMS = (eventId: string): ParticipatingTeam[] => {
-  const seed = eventId.split('-').pop() || '1';
-  const baseTeams: ParticipatingTeam[] = [
-    { rank: 1, name: 'Alpha Coders', shortName: 'AC', leaderName: 'Jane Smith', currentSize: 4, maxSize: 6, status: 'Qualified' },
-    { rank: 2, name: 'Beta Bytes', shortName: 'BB', leaderName: 'John Doe', currentSize: 6, maxSize: 6, status: 'Active' },
-    { rank: 3, name: 'Gamma Ray', shortName: 'GR', leaderName: 'Alice Wong', currentSize: 3, maxSize: 6, status: 'Eliminated' },
-    { rank: 4, name: 'Delta Force', shortName: 'DF', leaderName: 'Bob Miller', currentSize: 5, maxSize: 6, status: 'Active' },
-    { rank: 5, name: 'Epsilon Team', shortName: 'ET', leaderName: 'Sarah Chen', currentSize: 6, maxSize: 6, status: 'Qualified' },
-    { rank: 6, name: 'Zeta Squad', shortName: 'ZS', leaderName: 'Mike Ross', currentSize: 2, maxSize: 6, status: 'Active' },
-    { rank: 7, name: 'Lambda Loop', shortName: 'LL', leaderName: 'Chris Evans', currentSize: 4, maxSize: 6, status: 'Active' },
-    { rank: 8, name: 'Sigma Source', shortName: 'SS', leaderName: 'Tessa Violet', currentSize: 5, maxSize: 6, status: 'Qualified' },
-  ];
-
-  if (seed === '001') return baseTeams;
-  return baseTeams.map((t, idx) => ({
-    ...t,
-    rank: idx + 1,
-    currentSize: Math.floor(Math.random() * 5) + 1,
-    status: Math.random() > 0.3 ? 'Active' : 'Qualified'
-  }));
-};
+interface ApiResponse {
+  status: string;
+  data: {
+    teams: ParticipatingTeam[];
+  };
+}
 
 export const EventDetailView: React.FC<EventDetailViewProps> = ({ event, onBack }) => {
   const [activeSubTab, setActiveSubTab] = useState<'all' | 'my'>('all');
   const [selectedTeam, setSelectedTeam] = useState<ParticipatingTeam | null>(null);
 
-  const eventTeams = useMemo(() => GET_MOCK_TEAMS(event.id), [event.id]);
+  const { data, loading, error } = useAxios<ApiResponse>({
+    url: `/events/${event.id}/teams`,
+    method: 'GET'
+  });
+
+  const eventTeams = data?.data.teams || [];
 
   const myTeams = useMemo(() => {
     return eventTeams.filter((_, i) => i === 3);
@@ -103,8 +93,8 @@ export const EventDetailView: React.FC<EventDetailViewProps> = ({ event, onBack 
             <button
               onClick={() => setActiveSubTab('all')}
               className={`py-3 md:py-4 border-b-[3px] text-xs md:text-sm font-bold flex items-center gap-2 transition-all whitespace-nowrap ${activeSubTab === 'all'
-                  ? 'border-[#003366] text-[#003366]'
-                  : 'border-transparent text-slate-400 hover:text-slate-600'
+                ? 'border-[#003366] text-[#003366]'
+                : 'border-transparent text-slate-400 hover:text-slate-600'
                 }`}
             >
               All Teams
@@ -116,8 +106,8 @@ export const EventDetailView: React.FC<EventDetailViewProps> = ({ event, onBack 
             <button
               onClick={() => setActiveSubTab('my')}
               className={`py-3 md:py-4 border-b-[3px] text-xs md:text-sm font-bold flex items-center gap-2 transition-all whitespace-nowrap ${activeSubTab === 'my'
-                  ? 'border-[#003366] text-[#003366]'
-                  : 'border-transparent text-slate-400 hover:text-slate-600'
+                ? 'border-[#003366] text-[#003366]'
+                : 'border-transparent text-slate-400 hover:text-slate-600'
                 }`}
             >
               My Teams
@@ -131,8 +121,20 @@ export const EventDetailView: React.FC<EventDetailViewProps> = ({ event, onBack 
       </header>
 
       <main className="max-w-7xl mx-auto px-8 py-6 md:py-8 w-full flex-1">
-        <EventTeamsTable teams={displayedTeams} onViewTeam={setSelectedTeam} />
-        <EventStatsRecap />
+        {loading ? (
+          <div className="flex items-center justify-center py-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#003366]"></div>
+          </div>
+        ) : error ? (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-center">
+            Error loading teams: {error.message}
+          </div>
+        ) : (
+          <>
+            <EventTeamsTable teams={displayedTeams} onViewTeam={setSelectedTeam} />
+            <EventStatsRecap />
+          </>
+        )}
       </main>
     </div>
   );

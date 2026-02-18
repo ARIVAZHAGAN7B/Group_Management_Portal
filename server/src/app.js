@@ -1,7 +1,11 @@
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-const authRoutes = require('./api/routes/auth.routes');
+const authRoutes = require('./modules/auth/auth.routes');
+const myGroupRoutes = require('./modules/myGroup/myGroup.routes');
+const groupsRoutes = require('./modules/groups/groups.routes');
+const rankingsRoutes = require('./modules/rankings/rankings.routes');
+const eventsRoutes = require('./modules/events/events.routes');
 
 const app = express();
 
@@ -15,7 +19,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // Routes
-app.use('/api/auth', authRoutes);
+app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/my-group', myGroupRoutes);
+app.use('/api/v1/groups', groupsRoutes);
+app.use('/api/v1/rankings', rankingsRoutes);
+app.use('/api/v1/events', eventsRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
