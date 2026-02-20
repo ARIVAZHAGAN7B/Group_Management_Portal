@@ -5,7 +5,7 @@ import {
   StrategistIcon,
   ManagerIcon,
   UserIcon
-} from "../../../Assets/Icons";
+} from "../../../assets/Icons";
 
 interface LeaderCardProps {
   name: string;

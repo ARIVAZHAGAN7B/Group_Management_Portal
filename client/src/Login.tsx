@@ -3,10 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useStore } from './store/store';
 import { api } from './student/utils/api';
 import {
-  LogoIcon,
-  StudentRoleIcon,
-  FacultyRoleIcon,
-  AdminRoleIcon
+  LogoIcon
 } from './assets/Icons';
 
 export const Login: React.FC = () => {
@@ -42,8 +39,9 @@ export const Login: React.FC = () => {
         navigate('/');
       }
 
-    } catch (err: any) {
-      setError(err.message || 'Failed to login. Please check your credentials.');
+    } catch (err: unknown) {
+      const error = err as Error;
+      setError(error.message || 'Failed to login. Please check your credentials.');
     } finally {
       setLoading(false);
     }

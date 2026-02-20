@@ -1,19 +1,18 @@
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-const authRoutes = require('./modules/auth/auth.routes');
-const myGroupRoutes = require('./modules/myGroup/myGroup.routes');
-const groupsRoutes = require('./modules/groups/groups.routes');
-const rankingsRoutes = require('./modules/rankings/rankings.routes');
-const eventsRoutes = require('./modules/events/events.routes');
+const authRoutes = require('./sharedModules/auth/auth.routes');
+const myGroupRoutes = require('./studentModules/myGroup/myGroup.routes');
+const groupsRoutes = require('./studentModules/groups/groups.routes');
+const rankingsRoutes = require('./studentModules/rankings/rankings.routes');
+const eventsRoutes = require('./studentModules/events/events.routes');
 
 const app = express();
 
 app.use(cors({
-    origin: 'http://localhost:5173', // Adjust to your frontend URL
+    origin: 'http://localhost:5174', // Adjust to your frontend URL
     credentials: true
 }));
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());

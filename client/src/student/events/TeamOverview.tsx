@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { PersonIcon, Person2Icon, GroupsIconComp } from '../../Assets/Icons';
+import { PersonIcon, Person2Icon, GroupsIconComp } from '../../assets/Icons';
 
 interface TeamOverviewProps {
   leaderName: string;

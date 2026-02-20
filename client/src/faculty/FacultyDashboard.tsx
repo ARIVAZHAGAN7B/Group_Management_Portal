@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card } from '../shared/components/Card';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { ClockIcon } from '../Assets/Icons';
+import { ClockIcon } from '../assets/Icons';
 
 const gradeData = [
   { name: 'A', count: 12 },

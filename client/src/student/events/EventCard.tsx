@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { ArrowForwardIcon, ArchiveIcon } from '../../Assets/Icons';
+import { ArrowForwardIcon, ArchiveIcon } from '../../assets/Icons';
 
 export interface EventData {
   id: string;

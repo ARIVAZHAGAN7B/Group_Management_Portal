@@ -1,7 +1,7 @@
-const API_URL = 'http://localhost:5000/api/v1';
+const API_URL = 'http://localhost:5001/api/v1';
 
 export const api = {
-    async post(endpoint, data) {
+    async post(endpoint: string, data: any) {
         const response = await fetch(`${API_URL}${endpoint}`, {
             method: 'POST',
             headers: {
@@ -18,7 +18,7 @@ export const api = {
         return result;
     },
 
-    async get(endpoint) {
+    async get(endpoint: string) {
         const response = await fetch(`${API_URL}${endpoint}`, {
             method: 'GET',
             credentials: 'include',

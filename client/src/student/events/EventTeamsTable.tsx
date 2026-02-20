@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { SearchIcon, FilterListIcon, ChevronLeftIcon, ChevronRightIcon } from '../../Assets/Icons';
+import { SearchIcon, FilterListIcon, ChevronLeftIcon, ChevronRightIcon } from '../../assets/Icons';
 
 export interface ParticipatingTeam {
   rank: number;

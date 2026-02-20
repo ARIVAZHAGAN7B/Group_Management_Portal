@@ -1,7 +1,6 @@
 
 import React from 'react';
 import SearchIcon from "@mui/icons-material/Search";
-import FileDownloadIcon from "@mui/icons-material/FileDownload";
 
 interface RankingsHeaderProps {
   search: string;

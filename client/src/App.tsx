@@ -7,7 +7,7 @@ import { Login } from "./Login";
 import { AppLayout } from "./layout/AppLayout";
 
 import { StudentRoutes } from "./student/StudentRoutes";
-import { AdminRoutes } from "./admin/AdminRoutes";
+import { AdminRoutes } from "./admin/pages/AdminRoutes";
 import { FacultyRoutes } from "./faculty/FacultyRoutes";
 
 
@@ -75,10 +75,10 @@ const AppRouter: React.FC = () => {
             auth.user?.role === UserRole.STUDENT
               ? <Navigate to="/student/dashboard" />
               : auth.user?.role === UserRole.ADMIN
-              ? <Navigate to="/admin/dashboard" />
-              : auth.user?.role === UserRole.FACULTY
-              ? <Navigate to="/faculty/dashboard" />
-              : <Navigate to="/login" />
+                ? <Navigate to="/admin/dashboard" />
+                : auth.user?.role === UserRole.FACULTY
+                  ? <Navigate to="/faculty/dashboard" />
+                  : <Navigate to="/login" />
           }
         />
 

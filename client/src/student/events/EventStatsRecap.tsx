@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { EmojiEventsIcon, TimerIcon, WorkspacePremiumIcon } from '../../Assets/Icons';
+import { EmojiEventsIcon, TimerIcon, WorkspacePremiumIcon } from '../../assets/Icons';
 
 interface StatBoxProps {
   label: string;

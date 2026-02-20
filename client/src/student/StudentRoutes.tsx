@@ -5,7 +5,8 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { StudentDashboard } from './pages/StudentDashboard';
 import { AllGroups } from './pages/AllGroups';
 import { EventTeams } from './pages/EventTeams';
-import { MyGroupView } from './MyGroupView';
+import { MyGroupView as GroupDetailsView } from './MyGroupView';
+import { MyGroupView as MyGroupPage } from './pages/MyGroup';
 import { Rankings } from './pages/Rankings';
 
 /* My Group Components */
@@ -32,7 +33,7 @@ export const StudentRoutes: React.FC = () => {
       <Route path="dashboard" element={<StudentDashboard />} />
 
       {/* ================= My Group ================= */}
-      <Route path="mygroup" element={<MyGroupView isOwnGroup={true} />}>
+      <Route path="mygroup" element={<MyGroupPage isOwnGroup={true} />}>
         <Route path="members" element={<MembersPage />} />
         <Route path="phases" element={<PhasesPage />} />
         <Route path="group-leader-board" element={<GroupLeaderboardPage />} />
@@ -42,7 +43,7 @@ export const StudentRoutes: React.FC = () => {
       {/* ================= All Groups ================= */}
       <Route path="all-groups">
         <Route index element={<AllGroups />} />
-        <Route path=":groupId" element={<MyGroupView isOwnGroup={false} />}>
+        <Route path=":groupId" element={<GroupDetailsView isOwnGroup={false} />}>
           <Route path="members" element={<MembersPage />} />
           <Route path="phases" element={<PhasesPage />} />
           <Route index element={<Navigate to="members" replace />} />
@@ -60,3 +61,4 @@ export const StudentRoutes: React.FC = () => {
     </Routes>
   );
 };
+

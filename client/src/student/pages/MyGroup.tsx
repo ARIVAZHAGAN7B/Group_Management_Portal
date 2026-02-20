@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { GroupHeader } from "../components/Group/GroupHeader";
 import { useAxios } from "../hooks/useAxios";

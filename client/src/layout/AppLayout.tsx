@@ -1,6 +1,6 @@
 import React from "react";
 import { type ReactNode } from "react";
-import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 import { useStore } from "../store/store";
 import { UserRole } from "../types";
 
@@ -16,7 +16,7 @@ import {
   MessageIcon,
   TimerIcon,
   LogoutIcon
-} from "../Assets/Icons";
+} from "../assets/Icons";
 
 
 
@@ -39,7 +39,6 @@ interface MenuItem {
 export const AppLayout: React.FC = () => {
   const { auth, logout } = useStore();
   const { user } = auth;
-  const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
 
   if (!user) return null;
@@ -91,7 +90,7 @@ export const AppLayout: React.FC = () => {
               <div className="w-10 h-10 bg-blue-900 rounded-lg flex items-center justify-center text-white">
                 <LogoIcon />
               </div>
-              <h1 className="font-bold text-lg text-blue-900">UniPortal</h1>
+              <h1 className="font-bold text-lg text-blue-900">GM Portal</h1>
             </div>
             {/* Close button for mobile */}
             <button

@@ -1,5 +1,5 @@
-import React from "react";
-import { ClockIcon } from "../../Assets/Icons";
+
+import { ClockIcon } from "../../assets/Icons";
 
 export const PhasesPage = () => {
   return (

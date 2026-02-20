@@ -1,5 +1,5 @@
 
-// This file is deprecated. Icons have moved to @/Assets/Icons.tsx
+// This file is deprecated. Icons have moved to @/assets/Icons.tsx
 export {
     LogoIcon,
     StudentRoleIcon,
@@ -16,4 +16,4 @@ export {
     EditIcon,
     PersonRemoveIcon,
     UserIcon
-} from '../../Assets/Icons';
+} from '../../assets/Icons';

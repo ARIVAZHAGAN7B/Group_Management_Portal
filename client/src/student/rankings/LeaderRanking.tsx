@@ -21,7 +21,7 @@ export const LeaderRanking: React.FC<Props> = ({ search, tier }) => {
     method: 'GET'
   });
 
-  const MOCK_LEADERS = data?.data.rankings || [];
+  const MOCK_LEADERS = useMemo(() => data?.data.rankings || [], [data?.data.rankings]);
 
   const allFilteredData = useMemo(() => {
     return MOCK_LEADERS.filter((item) => {

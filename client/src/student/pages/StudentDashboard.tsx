@@ -8,7 +8,7 @@ import {
   CalendarIcon,
   WarningIcon,
   ClockIcon
-} from '../../Assets/Icons';
+} from '../../assets/Icons';
 
 const data = [
   { name: 'W1', score: 40 },

@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { EventCard, type EventData } from './EventCard';
 import { EventDetailView } from './EventDetailView';
 import { ChevronLeftIcon, ChevronRightIcon, SearchIcon } from '../../assets/Icons';
@@ -18,7 +18,7 @@ export const EventTeamsView: React.FC = () => {
     method: 'GET'
   });
 
-  const MOCK_EVENTS = data?.data.events || [];
+  const MOCK_EVENTS = useMemo(() => data?.data.events || [], [data?.data.events]);
   const [selectedEvent, setSelectedEvent] = useState<EventData | null>(null);
   const [activeSubTab, setActiveSubTab] = useState<'all' | 'my'>('all');
   const [search, setSearch] = useState('');
@@ -49,7 +49,7 @@ export const EventTeamsView: React.FC = () => {
     }
 
     return result;
-  }, [activeSubTab, search, statusFilter, startDate, endDate]);
+  }, [activeSubTab, search, statusFilter, startDate, endDate, MOCK_EVENTS]);
 
   const totalPages = Math.ceil(filteredEvents.length / pageSize) || 1;
   const paginatedEvents = filteredEvents.slice((currentPage - 1) * pageSize, currentPage * pageSize);

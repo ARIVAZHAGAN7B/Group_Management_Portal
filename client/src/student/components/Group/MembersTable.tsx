@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useStore } from '../../../store/store';
-import { SearchIcon, EditIcon, PersonRemoveIcon, UserIcon } from '../../../Assets/Icons';
+import { SearchIcon, EditIcon, PersonRemoveIcon, UserIcon } from '../../../assets/Icons';
 
 interface Member {
   id: number;

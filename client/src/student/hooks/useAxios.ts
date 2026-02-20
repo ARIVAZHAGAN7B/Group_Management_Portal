@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import axios, { type AxiosRequestConfig, type AxiosResponse, AxiosError } from 'axios';
 
 const api = axios.create({
-    baseURL: 'http://localhost:5000/api/v1',
+    baseURL: 'http://localhost:5001/api/v1',
     withCredentials: true,
 });
 
@@ -12,7 +12,7 @@ interface UseAxiosState<T> {
     error: AxiosError | null;
 }
 
-export const useAxios = <T = any>(config: AxiosRequestConfig, immediate = true) => {
+export const useAxios = <T = unknown>(config: AxiosRequestConfig, immediate = true) => {
     const [state, setState] = useState<UseAxiosState<T>>({
         data: null,
         loading: immediate,
@@ -45,8 +45,9 @@ export const useAxios = <T = any>(config: AxiosRequestConfig, immediate = true) 
 
     useEffect(() => {
         if (immediate) {
-            execute();
+            void execute();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [immediate]);
 
     return { ...state, execute };

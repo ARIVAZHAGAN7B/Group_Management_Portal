@@ -1,6 +1,5 @@
 
 // Icons.tsx
-import React from "react";
 
 // MUI Icons
 import DashboardIconMui from "@mui/icons-material/Dashboard";

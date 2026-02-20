@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { GroupSettingsIcon, LeaveGroupIcon, MemberCountIcon } from '../../../Assets/Icons';
+import { GroupSettingsIcon, LeaveGroupIcon, MemberCountIcon } from '../../../assets/Icons';
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 
 interface GroupHeaderProps {

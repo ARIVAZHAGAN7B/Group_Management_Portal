@@ -21,7 +21,7 @@ export const GroupRanking: React.FC<Props> = ({ search, tier }) => {
     method: 'GET'
   });
 
-  const MOCK_GROUPS = data?.data.rankings || [];
+  const MOCK_GROUPS = useMemo(() => data?.data.rankings || [], [data?.data.rankings]);
 
   const allFilteredData = useMemo(() => {
     return MOCK_GROUPS.filter((item) => {

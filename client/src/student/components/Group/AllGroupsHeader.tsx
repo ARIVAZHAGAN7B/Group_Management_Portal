@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { SearchIcon, FilterListIcon } from '../../../Assets/Icons';
+import { SearchIcon, FilterListIcon } from '../../../assets/Icons';
 import CloseIcon from "@mui/icons-material/Close";
 
 interface AllGroupsHeaderProps {

@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { type EventData } from './EventCard';
 import { EventTeamsTable, type ParticipatingTeam } from './EventTeamsTable';
 import { EventStatsRecap } from './EventStatsRecap';
@@ -8,7 +8,7 @@ import {
   GroupsIconComp,
   AddCircleIcon,
   ChevronLeftIcon
-} from '../../Assets/Icons';
+} from '../../assets/Icons';
 import { useAxios } from '../hooks/useAxios';
 
 interface EventDetailViewProps {
@@ -32,7 +32,7 @@ export const EventDetailView: React.FC<EventDetailViewProps> = ({ event, onBack 
     method: 'GET'
   });
 
-  const eventTeams = data?.data.teams || [];
+  const eventTeams = useMemo(() => data?.data.teams || [], [data?.data.teams]);
 
   const myTeams = useMemo(() => {
     return eventTeams.filter((_, i) => i === 3);

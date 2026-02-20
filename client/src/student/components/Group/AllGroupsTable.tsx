@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { UserIcon } from '../../../Assets/Icons';
+import { UserIcon } from '../../../assets/Icons';
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 

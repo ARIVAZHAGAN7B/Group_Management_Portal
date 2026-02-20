@@ -9,7 +9,7 @@ import {
   StarsIcon,
   PersonAddIcon,
   ChevronLeftIcon
-} from '../../Assets/Icons';
+} from '../../assets/Icons';
 
 interface TeamDetailViewProps {
   team: ParticipatingTeam;

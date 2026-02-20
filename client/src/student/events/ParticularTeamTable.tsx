@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { EditIcon, DeleteIcon, PersonAddIcon } from '../../Assets/Icons';
+import { EditIcon, DeleteIcon, PersonAddIcon } from '../../assets/Icons';
 
 interface TeamMember {
   id: string;
